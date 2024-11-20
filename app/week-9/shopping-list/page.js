@@ -1,27 +1,39 @@
+"use client";
+
 import { useUserAuth } from "../_utils/auth-context";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ShoppingListPage = () => {
-  const { user } = useUserAuth();
-  const router = useRouter();
+    const { user } = useUserAuth();
+    const router = useRouter();
+    const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/week-9"); // Redirect to landing page if not logged in
-    }
-  }, [user, router]);
+    useEffect(() => {
+        if (!user) {
+            router.push("/login");
+        }
+    }, [user, router]);
 
-  if (!user) {
-    return <p>Loading...</p>; // Optional loading state
-  }
+    const handleAddItem = async (item) => {
+        
+        setItems((prev) => [...prev, item]);
+    };
 
-  return (
-    <div>
-      <h1>Your Shopping List</h1>
-      {/* Render the shopping list here */}
-    </div>
-  );
+    return (
+        <div>
+            <h1>Shopping List</h1>
+            {items.length > 0 ? (
+                <ul>
+                    {items.map((item, index) => (
+                        <li key={index}>{item.name}</li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No items yet.</p>
+            )}
+        </div>
+    );
 };
 
 export default ShoppingListPage;
